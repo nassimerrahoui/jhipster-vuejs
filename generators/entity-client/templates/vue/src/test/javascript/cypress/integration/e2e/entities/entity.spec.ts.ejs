@@ -12,9 +12,9 @@ const baseApi = (applicationType === 'gateway' && locals.microserviceName) ? mic
 let openBlockComment = ``;
 let closeBlockComment = ``;
 for (let relationship of relationships) {
-    if (relationship.relationshipRequired) {
-        openBlockComment = `/*`;
-        closeBlockComment = `*/`;
+    if (relationship.relationshipRequired || relationship.useJPADerivedIdentifier) {
+        openBlockComment = `/* `;
+        closeBlockComment = ` */`;
         break;
     }
 } _%>
@@ -77,7 +77,7 @@ describe('<%= entityClass %> e2e test', () => {
     }
   });
 
-  it('should load create <%= entityClass %> page', () => {
+<%= openBlockComment %> it('should load create <%= entityClass %> page', () => {
     <%= entityClass %>ComponentsPage.clickOnCreateButton();
 
     <%= entityClass %>UpdatePage.getFooter().should('exist');
@@ -88,9 +88,9 @@ describe('<%= entityClass %> e2e test', () => {
     <%_ } else { _%>
     <%= entityClass %>UpdatePage.getPageTitle().invoke('text').should('equal', 'Create or edit a <%= entityAngularName %>')
     <%_ } _%>
-  });
+  }); <%= closeBlockComment %>
 
-   it('should create and save <%= entityClassPlural %>', () => {
+<%= openBlockComment %> it('should create and save <%= entityClassPlural %>', () => {
     <%_ fields.forEach((field) => {
       const fieldName = field.fieldName;
       const fieldNameCapitalized = field.fieldNameCapitalized;
@@ -151,9 +151,9 @@ describe('<%= entityClass %> e2e test', () => {
     getSuccessToast().should('exist');
 
     <%= entityClass %>ComponentsPage.getDeleteButtons().should('have.lengthOf', startingEntitiesCount + 1);
-  });
+  }); <%= closeBlockComment %>
 
-  it('should load details <%= entityClass %> page and fetch data', () => {
+<%= openBlockComment %> it('should load details <%= entityClass %> page and fetch data', () => {
     <%_ if (pagination !== 'no' && pagination !== 'infinite-scroll') { _%>
     getIdSortButton().click();
     <%_ } _%>
@@ -167,9 +167,9 @@ describe('<%= entityClass %> e2e test', () => {
 
     <%= entityClass %>DetailsPage.getBackButton().click();
     cy.get('div table .btn-danger').should('have.lengthOf', startingEntitiesCount + 1);
-  });
+  }); <%= closeBlockComment %>
 
-  it('should load edit <%= entityClass %> page and fetch data', () => {
+<%= openBlockComment %> it('should load edit <%= entityClass %> page and fetch data', () => {
     cy.server();
     cy.route('GET', '/<%= baseApi + entityApiUrl %>/*').as('getEntityRequest');
 
@@ -231,9 +231,9 @@ describe('<%= entityClass %> e2e test', () => {
 
     // Info toast should appear
     getInfoToast().should('exist');
-  });
+  }); <%= closeBlockComment %>
 
-  it('should delete last <%= entityClass %>', () => {
+<%= openBlockComment %> it('should delete last <%= entityClass %>', () => {
     cy.server();
     cy.route('DELETE', '/<%= baseApi + entityApiUrl %>/*').as('deleteEntityRequest');
 
@@ -262,7 +262,7 @@ describe('<%= entityClass %> e2e test', () => {
     }
     // Danger toast should appear
     getDangerToast().should('exist')
-  });
+  }); <%= closeBlockComment %>
 
   after(() => {
     cy.cleanUsers();

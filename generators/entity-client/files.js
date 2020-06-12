@@ -29,9 +29,9 @@ const VUE_DIR = 'src/main/webapp/app/';
 const CLIENT_VUE_TEMPLATES_DIR = 'vue';
 
 /**
-* The default is to use a file path string. It implies use of the template method.
-* For any other config an object { file:.., method:.., template:.. } can be used
-*/
+ * The default is to use a file path string. It implies use of the template method.
+ * For any other config an object { file:.., method:.., template:.. } can be used
+ */
 
 const vueFiles = {
     client: [
